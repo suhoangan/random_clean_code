@@ -4,7 +4,8 @@ import { EXAMPLES } from './constants';
 import CodeCard from './components/CodeCard';
 
 const App: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // Initialize with a random index instead of 0
+  const [currentIndex, setCurrentIndex] = useState(() => Math.floor(Math.random() * EXAMPLES.length));
 
   const currentExample = EXAMPLES[currentIndex];
 

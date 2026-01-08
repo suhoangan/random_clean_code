@@ -1,18 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowRight, Shuffle, Info, Code2, Github } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { ArrowRight, Shuffle, Code2, Github } from 'lucide-react';
 import { EXAMPLES } from './constants';
 import CodeCard from './components/CodeCard';
-import ExplanationPanel from './components/ExplanationPanel';
-import { explainCodeDifference } from './services/geminiService';
-import { ExplanationState } from './types';
 
 const App: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [explanation, setExplanation] = useState<ExplanationState>({
-    isLoading: false,
-    content: null,
-    error: null,
-  });
 
   const currentExample = EXAMPLES[currentIndex];
 
@@ -24,29 +16,7 @@ const App: React.FC = () => {
     } while (nextIndex === currentIndex && EXAMPLES.length > 1);
     
     setCurrentIndex(nextIndex);
-    // Reset explanation when changing cards
-    setExplanation({ isLoading: false, content: null, error: null });
   }, [currentIndex]);
-
-  const handleExplain = async () => {
-    if (explanation.content) return; // Already explained
-
-    setExplanation({ isLoading: true, content: null, error: null });
-    try {
-      const text = await explainCodeDifference(currentExample);
-      setExplanation({ isLoading: false, content: text, error: null });
-    } catch (err: any) {
-      setExplanation({ 
-        isLoading: false, 
-        content: null, 
-        error: err.message || "Something went wrong" 
-      });
-    }
-  };
-
-  useEffect(() => {
-    // Optional: Preload or initial logic could go here
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-200 flex flex-col">
@@ -93,18 +63,6 @@ const App: React.FC = () => {
           
           <div className="flex items-center gap-2">
             <button
-              onClick={handleExplain}
-              disabled={explanation.isLoading}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                explanation.content 
-                  ? 'bg-indigo-500/10 text-indigo-300 border border-indigo-500/50'
-                  : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700'
-              }`}
-            >
-              <Info className="w-4 h-4" />
-              {explanation.isLoading ? 'Thinking...' : 'Why is this better?'}
-            </button>
-            <button
               onClick={handleNext}
               className="group flex items-center gap-2 px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
             >
@@ -129,14 +87,6 @@ const App: React.FC = () => {
           <CodeCard type="good" code={currentExample.good.code} />
         </div>
 
-        {/* AI Explanation Section */}
-        <ExplanationPanel 
-          isLoading={explanation.isLoading} 
-          content={explanation.content} 
-          error={explanation.error}
-          onClose={() => setExplanation(prev => ({ ...prev, content: null, error: null }))} 
-        />
-
       </main>
 
       {/* Footer */}
@@ -145,9 +95,6 @@ const App: React.FC = () => {
           <p>© {new Date().getFullYear()} Clean Code Cards</p>
           <div className="flex gap-6 mt-4 sm:mt-0">
             <p>Built with React & Tailwind</p>
-            <p className="flex items-center gap-1">
-              Powered by <span className="text-indigo-400 font-semibold">Gemini</span>
-            </p>
           </div>
         </div>
       </footer>

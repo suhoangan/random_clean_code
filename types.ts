@@ -11,9 +11,3 @@ export interface CleanCodeExample {
   good: CodeSnippet;
   principle: string;
 }
-
-export interface ExplanationState {
-  isLoading: boolean;
-  content: string | null;
-  error: string | null;
-}

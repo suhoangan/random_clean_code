@@ -1,0 +1,5 @@
+{
+  "name": "Clean Code Cards",
+  "description": "A flashcard-style learning tool for JavaScript/TypeScript clean code principles, featuring Bad vs. Good code comparisons and AI-powered explanations.",
+  "requestFramePermissions": []
+}

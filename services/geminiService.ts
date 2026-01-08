@@ -1,22 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 import { CleanCodeExample } from "../types";
 
-const apiKey = process.env.API_KEY || '';
-
-// Safely initialize API client only if key exists, otherwise we handle the error at call time
-const getAiClient = () => {
-  if (!apiKey) {
-    console.warn("API_KEY is not set in process.env");
-    return null;
-  }
-  return new GoogleGenAI({ apiKey });
-};
-
 export const explainCodeDifference = async (example: CleanCodeExample): Promise<string> => {
-  const ai = getAiClient();
-  if (!ai) {
-    throw new Error("API Key is missing. Please configure process.env.API_KEY to use AI features.");
-  }
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const prompt = `
     You are a Clean Code expert. 
